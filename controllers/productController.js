@@ -1,5 +1,6 @@
 const Product = require('../models/productModel');
 const catchAsync = require('../utils/catchAsync');
+const AppError = require('../utils/appError');
 
 exports.getAllProducts = catchAsync(async (req, res, next) => {
     const products = await Product.find();
@@ -27,6 +28,11 @@ exports.createProduct = catchAsync(async (req, res, next) => {
 
 exports.getProduct = catchAsync(async (req, res, next) => {
     const product = await Product.findById(req.params.id);
+    console.log(req.params.id);
+
+    if (!product) {
+        return next(new AppError(`Can't find any tour with that ID`, 404))
+    };
 
     res.status(200).json({
         status: 'success',
@@ -43,6 +49,10 @@ exports.updateProduct = catchAsync(async (req, res, next) => {
         runValidators: true
     });
 
+    if (!product) {
+        return next(new AppError(`Can't find any tour with that ID`, 404))
+    };
+
     res.status(200).json({
         status: 'success',
         data: {
@@ -55,7 +65,11 @@ exports.updateProduct = catchAsync(async (req, res, next) => {
 exports.deleteProduct = catchAsync(async (req, res, next) => {
     const product = await Product.findByIdAndDelete(req.params.id);
 
-    res.status(200).json({
+    if (!product) {
+        return next(new AppError(`Can't find any tour with that ID`, 404))
+    };
+
+    res.status(204).json({
         status: 'success',
         data: {
             product
