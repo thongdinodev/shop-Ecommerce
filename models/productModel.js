@@ -37,6 +37,11 @@ const productSchema = new mongoose.Schema({
     description: {
         type: String,
         required: [true, 'A product must have a description']
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now(),
+        select: false
     }
 });
 
