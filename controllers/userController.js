@@ -5,7 +5,6 @@ const { getAll, createOne, getOne, updateOne, deleteOne } = require('./handlerFa
 
 
 exports.getAllUsers = getAll(User);
-exports.createUser = createOne(User);
 exports.getUser = getOne(User);
 exports.updateUser = updateOne(User);
 exports.deleteUser = deleteOne(User);

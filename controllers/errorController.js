@@ -6,8 +6,8 @@ const handlerCastErrorDB = err => {
 };
 
 const handlerDuplicateErrorDB = err => {
-    const value = err.keyValue.name;
-    console.log(value);
+    //const value = err.keyValue;
+    const value = Object.values(err.keyValue)[0];
 
     const message = `Duplicate field value: ${value}. Please use another value!`;
     return new AppError(message, 400);
@@ -57,7 +57,9 @@ module.exports = (err, req, res, next) => {
         sendErrorDev(err, res);
     } else if (process.env.NODE_ENV === 'production') {
 
-        let error = {...err, name: err.name};
+        let error = {...err};
+        error.name = err.name;
+        error.message = err.message;
 
         if (error.name === 'CastError') error = handlerCastErrorDB(error);
         if (error.code === 11000) error = handlerDuplicateErrorDB(error);
