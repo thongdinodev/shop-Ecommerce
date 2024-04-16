@@ -5,11 +5,17 @@ const productController = require('../controllers/productController');
 const authController = require('../controllers/authController');
 
 // use protected auth for all route
-router.use(authController.protected);
 
+router
+    .get('/top-5-product', 
+    productController.aliasTopProducts, 
+    productController.getAllProducts
+);
 router.get('/', productController.getAllProducts);
 router.get('/:id', productController.getProduct);
 
+
+router.use(authController.protected);
 router.use(authController.restricTo('admin'));
 
 router.post('/', productController.createProduct);

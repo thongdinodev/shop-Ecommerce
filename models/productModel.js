@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const _ = require('lodash');
 
 const productSchema = new mongoose.Schema({
     name: {
@@ -43,7 +44,21 @@ const productSchema = new mongoose.Schema({
         default: Date.now(),
         select: false
     }
+}, {
+    toJSON: {virtuals: true}
 });
+
+// Virtual
+productSchema.virtual('totalPrice').get(function() {
+    return this.price * this.instock;
+});
+
+
+productSchema.pre('save', function(next) {
+    this.slug = _.kebabCase(this.name);
+    next();
+});
+
 
 const Product = mongoose.model('Product', productSchema);
 
