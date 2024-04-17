@@ -5,7 +5,7 @@ const { getAll, createOne, getOne, updateOne, deleteOne } = require('./handlerFa
 exports.getAllProducts = getAll(Product);
 
 exports.createProduct = createOne(Product);
-exports.getProduct = getOne(Product);
+exports.getProduct = getOne(Product, { path: 'reviews' });
 exports.updateProduct = updateOne(Product);
 exports.deleteProduct = deleteOne(Product);
 

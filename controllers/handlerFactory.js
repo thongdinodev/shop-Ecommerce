@@ -38,10 +38,13 @@ exports.createOne = Model =>
     
 });
 
-exports.getOne = Model => 
+exports.getOne = (Model, popOptions) => 
     catchAsync(async (req, res, next) => {
-        const doc = await Model.findById(req.params.id);
-
+        // const doc = await Model.findById(req.params.id);
+        let query = Model.findById(req.params.id);
+        if (popOptions) query = query.populate(popOptions);
+        const doc = await query;
+        
         if (!doc) {
             return next(new AppError(`Can't find any doc with that ID`, 404))
         };

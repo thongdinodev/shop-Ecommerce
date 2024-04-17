@@ -26,11 +26,14 @@ const reviewSchema = new mongoose.Schema({
         default: Date.now,
         select: false
     }
+}, {
+    toJSON: {virtuals: true},
+    toObject: {virtuals: true}
 });
 
 reviewSchema.pre(/^find/, function(next) {
     this
-    .lean()
+    // .lean()
     .populate({
         path: 'product',
         select: 'name price '

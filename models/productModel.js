@@ -64,7 +64,13 @@ productSchema.virtual('totalPrice').get(function() {
     return this.price * this.instock;
 });
 
+productSchema.virtual('reviews', {
+    ref: 'Review',
+    foreignField: 'product',
+    localField: '_id'
+}); 
 
+// MIDDLEWARE
 productSchema.pre('save', function(next) {
     this.slug = _.kebabCase(this.name);
     next();
