@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const _ = require('lodash');
-// const User = require('./userModel');
 
 const productSchema = new mongoose.Schema({
     name: {
@@ -36,6 +35,10 @@ const productSchema = new mongoose.Schema({
         min: [0, 'Out of stock'],
         default: 1
     },
+    photo: {
+        type: String,
+        default: 'product-default.png'
+    },
     description: {
         type: String,
         required: [true, 'A product must have a description']
@@ -48,11 +51,12 @@ const productSchema = new mongoose.Schema({
     ],
     createdAt: {
         type: Date,
-        default: Date.now(),
+        default: Date.now,
         select: false
     }
 }, {
-    toJSON: {virtuals: true}
+    toJSON: {virtuals: true},
+    toObject: {virtuals: true}
 });
 
 // Virtual
@@ -72,8 +76,7 @@ productSchema.pre(/^find/, function(next) {
         select: '-__v'
     });
     next();
-})
-
+});
 
 const Product = mongoose.model('Product', productSchema);
 
