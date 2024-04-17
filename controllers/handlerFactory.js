@@ -8,6 +8,7 @@ exports.getAll = Model =>
 
         // execute query
         const features = new APIFeatures(Model.find({}, {_id: 0}), req.query)
+        // {_id: 0} to handler error: Cannot do exclusion on field createdAt in inclusion projection
             .filter()
             .sort()
             .limitFields()
