@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const _ = require('lodash');
+// const User = require('./userModel');
 
 const productSchema = new mongoose.Schema({
     name: {
@@ -39,6 +40,12 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: [true, 'A product must have a description']
     },
+    customer: [
+        {
+            type: mongoose.Schema.ObjectId,
+            ref: 'User'
+        }
+    ],
     createdAt: {
         type: Date,
         default: Date.now(),
@@ -58,6 +65,14 @@ productSchema.pre('save', function(next) {
     this.slug = _.kebabCase(this.name);
     next();
 });
+
+productSchema.pre(/^find/, function(next) {
+    this.populate({
+        path: 'customer',
+        select: '-__v'
+    });
+    next();
+})
 
 
 const Product = mongoose.model('Product', productSchema);

@@ -17,3 +17,30 @@ exports.aliasTopProducts = (req, res, next) => {
     next();
 };
 
+exports.getProductStats = catchAsync(async (req, res, next) => {
+    const productStats = await Product.aggregate([
+        {
+            $match: {
+                ratingsAverage: { $gte: 4.5, $lt: 5}
+            }
+        },
+        {
+            $group: {
+                _id: null,
+                numsProduct: { $sum: 1 },
+                avgRatings: { $avg: '$ratingsAverage' },
+                sumPrice: { $sum: '$price' },
+                minPrice: { $min: '$price' },
+                maxPrice: { $max: '$price' }
+            }
+        }
+        
+    ]);
+
+    res.status(200).json({
+        status: 'success',
+        data: {
+            productStats
+        }
+    });
+});

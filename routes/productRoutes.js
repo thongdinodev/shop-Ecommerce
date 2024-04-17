@@ -7,19 +7,40 @@ const authController = require('../controllers/authController');
 // use protected auth for all route
 
 router
-    .get('/top-5-product', 
-    productController.aliasTopProducts, 
-    productController.getAllProducts
-);
-router.get('/', productController.getAllProducts);
-router.get('/:id', productController.getProduct);
+    .route('/top-5-product')
+    .get( 
+        productController.aliasTopProducts, 
+        productController.getAllProducts
+    );
+
+router
+    .route('/product-stats')
+    .get(
+        productController.getProductStats
+    )
+
+router
+    .route('/')
+    .get(productController.getAllProducts)
+    .post(
+        authController.protected,
+        authController.restricTo('admin'),
+        productController.createProduct
+    );
 
 
-router.use(authController.protected);
-router.use(authController.restricTo('admin'));
-
-router.post('/', productController.createProduct);
-router.patch('/:id', productController.updateProduct);
-router.delete('/:id', productController.deleteProduct);
+router
+    .route('/:id')
+    .get(productController.getProduct)
+    .patch(
+        authController.protected,
+        authController.restricTo('admin'),
+        productController.updateProduct
+    )
+    .delete(
+        authController.protected,
+        authController.restricTo('admin'),
+        productController.deleteProduct
+    )
 
 module.exports = router;
