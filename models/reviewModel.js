@@ -77,10 +77,15 @@ reviewSchema.post('save', function() {
     this.constructor.calcRatingsAverage(this.product);
 });
 
-// reviewSchema.pre('save', function(next) {
-//     this.constructor.calcRatingsAverage(this.product);
-//     next();
-// });
+reviewSchema.pre(/^findOneAnd/, async function(next) {
+    // use .clone to fix error: Query was already executed
+    this.r = await this.clone().findOne();
+    next();
+});
+
+reviewSchema.post(/^findOneAnd/, async function() {
+    await this.r.constructor.calcRatingsAverage(this.r.product);
+});
 
 const Review = mongoose.model('Review', reviewSchema);
 

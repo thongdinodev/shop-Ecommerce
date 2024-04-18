@@ -40,3 +40,7 @@ exports.getAllReview = catchAsync(async (req, res, next) => {
         }
     });
 });
+
+exports.getReview = handlerFactory.getOne(Review);
+exports.updateReview = handlerFactory.updateOne(Review);
+exports.deleteReview = handlerFactory.deleteOne(Review);
