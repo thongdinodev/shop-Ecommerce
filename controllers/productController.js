@@ -2,7 +2,7 @@ const Product = require('../models/productModel');
 const catchAsync = require('../utils/catchAsync');
 const { getAll, createOne, getOne, updateOne, deleteOne } = require('./handlerFactory');
 
-exports.getAllProducts = getAll(Product);
+exports.getAllProducts = getAll(Product, { path: 'customer', select: '-__v'});
 
 exports.createProduct = createOne(Product);
 exports.getProduct = getOne(Product, { path: 'reviews' });

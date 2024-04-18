@@ -36,7 +36,7 @@ reviewSchema.pre(/^find/, function(next) {
     // .lean()
     .populate({
         path: 'product',
-        select: 'name price '
+        select: 'name price'
     })
     .populate({
         path: 'user',

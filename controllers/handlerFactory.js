@@ -3,18 +3,20 @@ const AppError = require('../utils/appError');
 const APIFeatures = require('../utils/apiFeatures');
 
 
-exports.getAll = Model => 
+exports.getAll = (Model, popOptions) => 
     catchAsync(async (req, res, next) => {
 
         // execute query
-        const features = new APIFeatures(Model.find({}, {_id: 0}), req.query)
+        let features = new APIFeatures(Model.find(), req.query)
         // {_id: 0} to handler error: Cannot do exclusion on field createdAt in inclusion projection
             .filter()
             .sort()
             .limitFields()
             .paginate();
 
-    const docs = await features.query;
+        if (popOptions) features = await features.query.populate(popOptions);
+        
+        const docs = features;
 
         res.status(200).json({
             status: 'success',

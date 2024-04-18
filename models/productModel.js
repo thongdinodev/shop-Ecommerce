@@ -76,13 +76,13 @@ productSchema.pre('save', function(next) {
     next();
 });
 
-productSchema.pre(/^find/, function(next) {
-    this.populate({
-        path: 'customer',
-        select: '-__v'
-    });
-    next();
-});
+// productSchema.pre(/^find/, function(next) {
+//     this.populate({
+//         path: 'customer',
+//         select: '-__v'
+//     });
+//     next();
+// });
 
 const Product = mongoose.model('Product', productSchema);
 

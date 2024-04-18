@@ -2,9 +2,13 @@ const express = require('express');
 const router = express.Router();
 
 const productController = require('../controllers/productController');
+const reviewController = require('../controllers/reviewController');
 const authController = require('../controllers/authController');
+const reviewRouter = require('./reviewRoutes');
 
 // use protected auth for all route
+
+router.use('/:productId/reviews', reviewRouter);
 
 router
     .route('/top-5-product')
@@ -42,5 +46,13 @@ router
         authController.restricTo('admin'),
         productController.deleteProduct
     )
+
+// router
+//     .route('/:productId/reviews')
+//     .post(
+//         authController.protected,
+//         authController.restricTo('user'),
+//         reviewController.createReview
+//     )
 
 module.exports = router;
