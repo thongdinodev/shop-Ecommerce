@@ -23,8 +23,8 @@ exports.getAllReview = catchAsync(async (req, res, next) => {
     if (req.params.productId) filter.product = req.params.productId;
 
     // execute query
-    const features = new APIFeatures(Review.find(filter).lean(), req.query)
     // {_id: 0} to handler error: Cannot do exclusion on field createdAt in inclusion projection
+    const features = new APIFeatures(Review.find(filter).lean(), req.query)
         .filter()
         .sort()
         .limitFields()
