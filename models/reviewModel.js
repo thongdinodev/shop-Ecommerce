@@ -32,6 +32,9 @@ const reviewSchema = new mongoose.Schema({
     toObject: {virtuals: true}
 });
 
+// add index to 1 user can create 1 review each product
+reviewSchema.index({ tour: 1, user: 1 }, { unique: true });
+
 reviewSchema.pre(/^find/, function(next) {
     this
     // .lean()
@@ -78,7 +81,7 @@ reviewSchema.post('save', function() {
 });
 
 reviewSchema.pre(/^findOneAnd/, async function(next) {
-    // use .clone to fix error: Query was already executed
+    // use .clone() to fix error: Query was already executed
     this.r = await this.clone().findOne();
     next();
 });

@@ -70,6 +70,9 @@ productSchema.virtual('reviews', {
     localField: '_id'
 }); 
 
+// COMPOUND INDEX
+productSchema.index({price: 1, ratingsAverage: -1});
+
 // MIDDLEWARE
 productSchema.pre('save', function(next) {
     this.slug = _.kebabCase(this.name);
