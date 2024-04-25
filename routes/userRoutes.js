@@ -16,6 +16,10 @@ router.post('/login', authController.login);
 
 router.post('/forgotPassword', authController.forgotPassword);
 router.patch('/resetPassword/:token', authController.resetPassword);
+router.patch('/updateMyPassword', authController.protected, authController.updatePassword);
+
+router.patch('/updateMe', authController.protected, userController.updateMe)
+
 
 router
     .route('/me')
@@ -30,11 +34,11 @@ router
     userController.getUser
 );
 
-router
-    .patch('/:id',
-        authController.protected, 
-        userController.updateUser
-    );
+// router
+//     .patch('/:id',
+//         authController.protected, 
+//         userController.updateUser
+//     );
 
 router
     .delete('/:id',
