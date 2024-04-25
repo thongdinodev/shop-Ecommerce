@@ -5,9 +5,13 @@ const APIFeatures = require('../utils/apiFeatures');
 
 exports.getAll = (Model, popOptions) => 
     catchAsync(async (req, res, next) => {
+        // allow to get nested review route
+        let filter = {};
+        if (req.params.tourId) filter = { tour: req.params.tourId };
+
 
         // execute query
-        let features = new APIFeatures(Model.find(), req.query)
+        let features = new APIFeatures(Model.find(filter), req.query)
         // {_id: 0} to handler error: Cannot do exclusion on field createdAt in inclusion projection
             .filter()
             .sort()

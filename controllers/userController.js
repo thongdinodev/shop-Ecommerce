@@ -2,6 +2,8 @@ const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const { getAll, getOne, updateOne, deleteOne } = require('./handlerFactory');
+const APIFeatures = require('../utils/apiFeatures');
+
 
 const filterObj = (obj, ...allowedFields) => {
     const newObj = {}
@@ -16,7 +18,28 @@ exports.getMe = catchAsync(async (req, res, next) => {
     next();
 });
 
-exports.getAllUsers = getAll(User);
+exports.getAllUsers = catchAsync(async (req, res, next) => {
+
+
+    // execute query
+    // {_id: 0} to handler error: Cannot do exclusion on field createdAt in inclusion projection
+    const features = new APIFeatures(User.find().lean(), req.query)
+        .filter()
+        .sort()
+        .limitFields()
+        .paginate();
+
+    const docs = await features.query;
+
+    res.status(200).json({
+        status: 'success',
+        result: docs.length,
+        data: {
+            docs
+        }
+    });
+});
+
 exports.getUser = getOne(User);
 exports.updateMe = catchAsync(async (req, res, next) => {
     if (req.body.password || req.body.passwordConfirm) {
@@ -37,4 +60,12 @@ exports.updateMe = catchAsync(async (req, res, next) => {
         }
     })
 })
-exports.deleteUser = deleteOne(User);
+
+exports.deleteMe = catchAsync(async (req, res, next) => {
+    await User.findByIdAndUpdate(req.user._id, {active: false})
+
+    res.status(204).json({
+        status: 'success',
+        message: 'OK, delete user success'
+    })
+})

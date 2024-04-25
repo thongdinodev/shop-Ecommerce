@@ -19,6 +19,7 @@ router.patch('/resetPassword/:token', authController.resetPassword);
 router.patch('/updateMyPassword', authController.protected, authController.updatePassword);
 
 router.patch('/updateMe', authController.protected, userController.updateMe)
+router.patch('/deleteMe', authController.protected, userController.deleteMe)
 
 
 router
@@ -40,11 +41,11 @@ router
 //         userController.updateUser
 //     );
 
-router
-    .delete('/:id',
-        authController.protected, 
-        userController.deleteUser
-);
+// router
+//     .delete('/:id',
+//         authController.protected, 
+//         userController.deleteUser
+// );
 
 
 module.exports = router;
