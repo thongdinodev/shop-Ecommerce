@@ -1,5 +1,10 @@
 const express = require('express');
 const path = require('path');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit')
+const mongoSanatize = require('express-mongo-sanitize')
+const xss = require('xss-clean')
+const hpp = require('hpp')
 
 const AppError = require('./utils/appError');
 
@@ -10,7 +15,30 @@ const reviewRouter = require('./routes/reviewRoutes');
 
 const app = express();
 
-app.use(express.json());
+app.use(helmet())
+
+const limiter = rateLimit({
+    windowMs: 60 * 60 * 1000, // 60 minutes
+    max: 100,
+    message: 'Too many api request, try again after 60 minutes'
+})
+
+app.use('/api', limiter)
+
+app.use(express.json({limit: '10kb'}));
+
+app.use(mongoSanatize())
+
+app.use(xss())
+
+app.use(hpp({
+    whitelist: [
+        'price',
+        'ratingsAverage',
+        'ratingsQuantity',
+        'instock'
+    ]
+}))
 
 app.use('/api/products', productRouter);
 app.use('/api/users', userRouter);
