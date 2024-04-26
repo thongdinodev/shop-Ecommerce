@@ -5,6 +5,7 @@ const rateLimit = require('express-rate-limit')
 const mongoSanatize = require('express-mongo-sanitize')
 const xss = require('xss-clean')
 const hpp = require('hpp')
+const bodyParser = require('body-parser')
 
 const AppError = require('./utils/appError');
 
@@ -12,6 +13,7 @@ const globalErrorHandler = require('./controllers/errorController');
 const productRouter = require('./routes/productRoutes');
 const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
+
 
 const app = express();
 
@@ -25,7 +27,7 @@ const limiter = rateLimit({
 
 app.use('/api', limiter)
 
-app.use(express.json({limit: '10kb'}));
+app.use(express.json());
 
 app.use(mongoSanatize())
 
@@ -43,6 +45,7 @@ app.use(hpp({
 app.use('/api/products', productRouter);
 app.use('/api/users', userRouter);
 app.use('/api/reviews', reviewRouter);
+
 
 app.all('*', (req, res, next) => {
     next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

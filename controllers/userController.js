@@ -1,9 +1,32 @@
 const User = require('../models/userModel');
+const { getAll, getOne, updateOne, deleteOne } = require('./handlerFactory');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
-const { getAll, getOne, updateOne, deleteOne } = require('./handlerFactory');
 const APIFeatures = require('../utils/apiFeatures');
+const multer = require('multer')
+const cloudinary = require('../utils/cloudinary')
 
+const multerStorage = multer.diskStorage({
+    filename: function(req, file, cb) {
+        const ext = file.mimetype.split('/')[1]
+        cb(null, `user-${req.user._id}-${Date.now()}.${ext}`)
+    }
+})
+
+const multerFilter = (req, file, cb) => {
+    if (file.mimetype.startsWith('image')) {
+      cb(null, true);
+    } else {
+      cb(new AppError('Not an image! Please upload only images.', 400), false)
+    }
+  }
+  
+const upload = multer({
+    storage: multerStorage,
+    fileFilter: multerFilter
+})
+
+exports.uploadUserPhoto = upload.single('avatar')
 
 const filterObj = (obj, ...allowedFields) => {
     const newObj = {}
@@ -46,8 +69,12 @@ exports.updateMe = catchAsync(async (req, res, next) => {
         return next(new AppError('Can not update password with this route, please use /updateMyPassword', 400))
     }
 
+    const resCloud = await cloudinary.uploader.upload(req.file.path, {
+        public_id: req.file.filename
+    })
+
     const filterBody = filterObj(req.body, 'name', 'email');
-    console.log(filterBody);
+    filterBody.photo = resCloud.url
     const updatedUser = await User.findByIdAndUpdate(req.user._id, filterBody, {
         new: true,
         runValidators: true
