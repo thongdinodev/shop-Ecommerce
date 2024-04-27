@@ -70,8 +70,10 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     }
 
     const resCloud = await cloudinary.uploader.upload(req.file.path, {
-        public_id: req.file.filename
+        public_id: req.file.filename,
+        folder: 'user-avatar-shopEcommerce'
     })
+    console.log(resCloud);
 
     const filterBody = filterObj(req.body, 'name', 'email');
     filterBody.photo = resCloud.url

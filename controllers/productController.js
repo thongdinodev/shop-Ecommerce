@@ -1,6 +1,29 @@
 const Product = require('../models/productModel');
 const catchAsync = require('../utils/catchAsync');
 const { getAll, createOne, getOne, updateOne, deleteOne } = require('./handlerFactory');
+const multer = require('multer')
+
+const multerStorage = multer.diskStorage({
+    filename: function(req, file, cb) {
+        const ext = file.mimetype.split('/')[1]
+        cb(null, `product-${req.params.productId}-${Date.now()}.${ext}`)
+    }
+})
+
+const multerFilter = (req, file, cb) => {
+    if (file.mimetype.startsWith('image')) {
+        cb(null, true);
+      } else {
+        cb(new AppError('Not an image! Please upload only images.', 400), false)
+      }
+}
+
+const upload = multer({
+    storage: multerStorage,
+    fileFilter: multerFilter
+})
+
+exports.uploadProductImage = upload.single('product')
 
 exports.getAllProducts = getAll(Product, { path: 'customer', select: '-__v'});
 
