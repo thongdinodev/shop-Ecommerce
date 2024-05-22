@@ -1,6 +1,7 @@
 const Review = require('../models/reviewModel');
 const handlerFactory = require('./handlerFactory');
 const catchAsync = require('../utils/catchAsync');
+const AppError = require('../utils/appError');
 const APIFeatures = require('../utils/apiFeatures');
 
 exports.createReview = catchAsync(async (req, res, next) => {
@@ -42,5 +43,25 @@ exports.getAllReview = catchAsync(async (req, res, next) => {
 });
 
 exports.getReview = handlerFactory.getOne(Review);
-exports.updateReview = handlerFactory.updateOne(Review);
+exports.updateReview = catchAsync(async (req, res, next) => {
+
+    const doc = await Review.findByIdAndUpdate(req.params.id, req.body, {
+        new: true,
+        runValidators: true
+    });
+
+
+    if (!doc) {
+        return next(new AppError(`Can't find any doc with that ID`, 404))
+    };
+
+    res.status(200).json({
+        status: 'success',
+        data: {
+            doc
+        }
+    });
+    
+});
+
 exports.deleteReview = handlerFactory.deleteOne(Review);

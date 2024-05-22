@@ -33,7 +33,7 @@ const reviewSchema = new mongoose.Schema({
 });
 
 // add index to 1 user can create 1 review each product
-reviewSchema.index({ tour: 1, user: 1 }, { unique: true });
+reviewSchema.index({ product: 1, user: 1 }, { unique: true });
 
 reviewSchema.pre(/^find/, function(next) {
     this

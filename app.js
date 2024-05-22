@@ -4,6 +4,7 @@ const rateLimit = require('express-rate-limit')
 const mongoSanatize = require('express-mongo-sanitize')
 const xss = require('xss-clean')
 const hpp = require('hpp')
+const cron = require('node-cron')
 
 const AppError = require('./utils/appError');
 
@@ -39,15 +40,29 @@ app.use(hpp({
     ]
 }))
 
+const wakeupServer = app.get('/api/wakeupServer', (req, res, next) => {
+    res.status(200).json({
+        status: 'success',
+        message: 'server is wake up'
+    })
+})
+
 app.use('/api/products', productRouter);
 app.use('/api/users', userRouter);
 app.use('/api/reviews', reviewRouter);
 
+// cron.schedule('*/2 * * * * *', () => {
+//     console.log('Server is wake up')
+//     app.use(wakeupServer())
+// })
 
 app.all('*', (req, res, next) => {
     next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
 
 app.use(globalErrorHandler);
+
+
+
 
 module.exports = app;

@@ -70,6 +70,7 @@ exports.updateOne = Model =>
     catchAsync(async (req, res, next) => {
         // if (!req.file) next()
 
+            
         const responseCloudinary = await cloudinary.uploader.upload(req.file.path, {
             public_id: req.file.filename,
             folder: 'product-shopEcommerce'

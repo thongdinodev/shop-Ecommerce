@@ -25,7 +25,7 @@ const upload = multer({
 
 exports.uploadProductImage = upload.single('product')
 
-exports.getAllProducts = getAll(Product, { path: 'customer', select: '-__v'});
+exports.getAllProducts = getAll(Product, { path: 'customer', select: '-__v -passwordChangedAt'});
 
 exports.createProduct = createOne(Product);
 exports.getProduct = getOne(Product, { path: 'reviews' });
