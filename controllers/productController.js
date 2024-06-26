@@ -2,6 +2,7 @@ const Product = require('../models/productModel');
 const catchAsync = require('../utils/catchAsync');
 const { getAll, createOne, getOne, updateOne, deleteOne } = require('./handlerFactory');
 const multer = require('multer')
+const {productValidate} = require('../utils/validation')
 
 const multerStorage = multer.diskStorage({
     filename: function(req, file, cb) {
@@ -27,7 +28,24 @@ exports.uploadProductImage = upload.single('product')
 
 exports.getAllProducts = getAll(Product, { path: 'customer', select: '-__v -passwordChangedAt'});
 
-exports.createProduct = createOne(Product);
+exports.createProduct = catchAsync(async (req, res, next) => {
+
+    const doc = await Product.create(req.body);
+
+    const {error, value} = productValidate(req.body)
+    console.log('====ERROR====', error);
+    if (error) {
+        throw new Error(`${error.details[0].message}`);
+    }
+
+    res.status(200).json({
+        status: 'success',
+        data: {
+            doc
+        }
+    });
+
+});
 exports.getProduct = getOne(Product, { path: 'reviews' });
 exports.updateProduct = updateOne(Product);
 exports.deleteProduct = deleteOne(Product);

@@ -4,6 +4,7 @@ const sendEmail = require('../utils/email');
 const User = require('../models/userModel');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
+const {userValidate} = require('../utils/validation')
 
 const signToken = (id) => {
     return jwt.sign({id}, process.env.JWT_SECRET_KEY, {
@@ -33,6 +34,12 @@ const createSendToken = (user, res, statusCode) => {
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
+
+    const {error} = userValidate(req.body)
+    console.log('===Error===', error);
+    if (error) {
+        throw new Error(`${error.details[0].message}`)
+    }
     const user = await User.create(req.body);
 
     createSendToken(user, res, 200);

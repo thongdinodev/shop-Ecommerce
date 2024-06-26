@@ -13,6 +13,7 @@ const productSchema = new mongoose.Schema({
     slug: String,
     price: {
         type: Number,
+        min: [1, 'price must be positive'],
         required: [true, 'Product must have a price']
     },
     ratingsAverage: {

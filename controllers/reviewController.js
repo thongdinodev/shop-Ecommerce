@@ -2,11 +2,19 @@ const Review = require('../models/reviewModel');
 const handlerFactory = require('./handlerFactory');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
+const {reviewValidate} = require('../utils/validation')
 const APIFeatures = require('../utils/apiFeatures');
 
 exports.createReview = catchAsync(async (req, res, next) => {
+    
     if (!req.body.product) req.body.product = req.params.productId;
     if (!req.body.user) req.body.user = req.user._id;
+
+    const {error} = reviewValidate(req.body)
+    console.log('=====ERROR=====',  error);
+    if (error) {
+        throw new Error(`${error.details[0].message}`)
+    }
 
     const doc = await Review.create(req.body);
 
