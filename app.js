@@ -5,6 +5,8 @@ const mongoSanatize = require('express-mongo-sanitize')
 const xss = require('xss-clean')
 const hpp = require('hpp')
 const cron = require('node-cron')
+const swaggerjsdoc = require('swagger-jsdoc')
+const swaggerui = require('swagger-ui-express')
 
 const AppError = require('./utils/appError');
 
@@ -50,6 +52,31 @@ const wakeupServer = app.get('/api/wakeupServer', (req, res, next) => {
 app.use('/api/products', productRouter);
 app.use('/api/users', userRouter);
 app.use('/api/reviews', reviewRouter);
+
+const options = {
+    definition: {
+      openapi: '3.0.0',
+      info: {
+        title: 'Shop Ecommerce API',
+        description: 'The Ecommerce shop NodeJS API contains endpoints for Products, Users, and Reviews',
+        contact: {
+            name: 'Thong Dino',
+            email: 'thong.dino.dev@gmail.com'
+        },
+        version: '1.0.0',
+      },
+    },
+    // looks for configuration in specified directories
+    apis: ['./routes/*.js'],
+  }
+
+const spacs = swaggerjsdoc(options)
+
+app.use(
+    '/api-doc',
+    swaggerui.serve,
+    swaggerui.setup(spacs)
+)
 
 // cron.schedule('*/2 * * * * *', () => {
 //     console.log('Server is wake up')

@@ -1,5 +1,6 @@
 const app = require('./app');
 const mongoose = require('mongoose');
+const swaggerDocs = './swagger.js'
 
 const port = process.env.PORT || 3000;
 
