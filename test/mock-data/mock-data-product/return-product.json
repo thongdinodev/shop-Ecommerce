@@ -1,0 +1,20 @@
+{
+    "status": "success",
+    "data": {
+      "doc": {
+        "name": "new test product 44224",
+        "price": 100,
+        "ratingsAverage": 4.5,
+        "ratingsQuantity": 10,
+        "image": "default.png",
+        "instock": 20,
+        "photo": "product-default.png",
+        "description": "The iPhone 17 display has rounded corners that.",
+        "customer": [
+          "661d3f6e48a0f4fe2b287aa4",
+          "661d3f7448a0f4fe2b287aa6"
+         ]
+
+      }
+    }
+  }

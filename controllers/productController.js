@@ -38,7 +38,7 @@ exports.createProduct = catchAsync(async (req, res, next) => {
         throw new Error(`${error.details[0].message}`);
     }
 
-    res.status(200).json({
+    res.status(201).json({
         status: 'success',
         data: {
             doc
