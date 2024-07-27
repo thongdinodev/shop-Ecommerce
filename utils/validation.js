@@ -17,7 +17,11 @@ const productValidate = data => {
         price: Joi.number().positive().error((errors) => new Error('"price" requires a positive number greater than 0')).required(),
         image: Joi.string().required(),
         description: Joi.string().min(5).required(), 
-        instock: Joi.number().min(0).error((errors) => new Error('"instock" requires a positive number')).required()
+        instock: Joi.number().min(0).error((errors) => new Error('"instock" requires a positive number')).required(),
+        customer: Joi.array(),
+        ratingsAverage: Joi.number().min(1).max(5),
+        ratingsQuantity: Joi.number().min(1),
+        photo: Joi.string()
     })
 
     return productSchema.validate(data)
