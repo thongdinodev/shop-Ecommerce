@@ -39,6 +39,11 @@ describe('productController.getAllProducts', () => {
     it('should have a getAllProducts function', () => {
         expect(typeof productController.getAllProducts).toBe('function')
     })
+    it('should call todoModel.find', async () => {
+        req.params.productId = productId
+        await productController.getAllProducts(req, res, next)
+        expect(productModel.find).toBeCalledWith({})
+    })
     it('should return all products and response http code 200', async () => {
         productModel.find.mockReturnValue(allProducts)
         await productController.getAllProducts(req, res, next)
