@@ -1,6 +1,6 @@
 const app = require('./app');
-const mongoose = require('mongoose');
 const swaggerDocs = './swagger.js'
+const ConnectDatabaseSingleton = require('./db/databse.connect.singleton')
 
 const port = process.env.PORT || 3000;
 
@@ -10,12 +10,7 @@ process.on('uncaughtException', err => {
     process.exit(1);
 });
 
-mongoose.connect(process.env.MONGODB_URL).then(() => {
-    console.log('Success to connect with mongoDB');
-})
-.catch((err) => {
-    console.log(err);
-});
+ConnectDatabaseSingleton.getInstance()
 
 const server = app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
